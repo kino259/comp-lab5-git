@@ -48,4 +48,14 @@ module.exports.routes = {
 
   'GET /person/search': 'PersonController.search',
   'GET /person/paginate': 'PersonController.paginate',
+
+  'GET /user': 'UserController.login',
+  'GET /user/login': 'UserController.login',
+  'POST /user/login': 'UserController.login',
+  'POST /user/logout': 'UserController.logout',
+
+  'GET /person/:id/consultants': 'PersonController.populate',
+  'GET /user/:id/clients': 'UserController.populate',
+  'POST /user/:id/clients/add/:fk': 'UserController.add',
+  'POST /user/:id/clients/remove/:fk': 'UserController.remove',
 };

@@ -27,4 +27,38 @@ module.exports.bootstrap = async function() {
   // ]);
   // ```
 
+  if (await Person.count() > 0) {
+    return generateUsers();
+  }
+  
+  await Person.createEach([
+    { name: "Martin Choy", age: 23 },
+    { name: "Kenny Cheng", age: 22 },
+    // etc.
+  ]);
+  
+  return generateUsers();
+  
+  async function generateUsers() {
+  
+    if (await User.count() > 0) {
+      return;
+    }
+    
+    var hashedPassword = await sails.helpers.passwords.hashPassword('123456');
+
+    await User.createEach([
+      { username: "admin", password: hashedPassword },
+      { username: "boss", password: hashedPassword },
+      // etc.
+    ]);
+
+    const martin = await Person.findOne({name: "Martin Choy"});
+    const kenny = await Person.findOne({name: "Kenny Cheng"});
+    const admin = await User.findOne({username: "admin"});
+    const boss = await User.findOne({username: "boss"});
+
+    await User.addToCollection(admin.id, 'clients').members(kenny.id);
+    await User.addToCollection(boss.id, 'clients').members([martin.id, kenny.id]);
+  }
 };
